@@ -1,6 +1,8 @@
 from flask import Flask, request, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 import validators
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -14,17 +16,19 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     body = db.Column(db.String(500))
+    pub_date = db.Column(db.DateTime)
     deleted = db.Column(db.Boolean)
 
-    def __init__(self, title):
-        self.title = title
-        self.body = ""
-        self.deleted = False
-
-    def __init__(self, title, body):
+    def __init__(self, title, body, pub_date=None):
         self.title = title
         self.body = body
+        if pub_date is None:
+            pub_date = datetime.utcnow()
+        self.pub_date = pub_date
         self.deleted = False
+
+    def __repr__(self):
+        return '<Blog %r>' % self.title
 
 
 
@@ -37,6 +41,7 @@ def index():
 @app.route('/blog', methods=['GET'])
 def blog():
     blogs = Blog.query.filter_by(deleted=False).all()
+    blogs_ordered_most_recent = Blog.query.filter_by(deleted=False).order_by(desc(Blog.pub_date)).all()
     deleted_blogs = Blog.query.filter_by(deleted=True).all()
 
     blog_id = request.args.get('id')
@@ -45,7 +50,9 @@ def blog():
         indv_blog = Blog.query.get(blog_id)
         return render_template('individualblog.html',title="Build a Blog!", blogs=blogs, blog=indv_blog)
     else:
-        return render_template('blog.html',title="Build a Blog!", blogs=blogs, deleted_blogs=deleted_blogs)
+        #return render_template('blog.html',title="Build a Blog!", blogs=blogs, deleted_blogs=deleted_blogs)
+        return render_template('blog.html',title="Build a Blog!", blogs=blogs_ordered_most_recent, deleted_blogs=deleted_blogs)
+
 
 
 
