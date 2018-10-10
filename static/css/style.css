@@ -1,0 +1,102 @@
+.error {
+  color: red;
+  font-style: italic;
+}
+
+body{
+  width: 80%;
+  margin: auto;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+header{
+  background: #333333;
+  color: white;
+  padding: 5px;
+  margin: auto;
+  border-bottom: rgb(0, 153, 255) 3px solid;
+  height: 70px;  
+}
+
+/*header h1, header nav{
+  display: inline-block;
+  padding: 15px;
+  margin-left: 30px;
+}*/
+
+header h1{
+  display: inline-block;
+  padding: auto;
+  margin-left: 30px;
+}
+
+nav{
+  display: inline-block;
+  text-align: center;
+  /*margin-left: 50px;*/
+  margin-right: 50px;
+  margin-top: 10px;
+  padding: auto;
+  /*border: white 1px dotted;*/
+  float: left; 
+}
+
+header ul{
+  text-align: center;
+}
+
+header li{
+  display: inline;
+  padding: 20px;
+}
+
+nav a{
+  text-decoration: none;
+  text-transform: uppercase;
+	color: white;
+}
+
+a:hover{
+	color:rgb(0, 162, 255);
+}
+
+a:active{
+	color:green;
+}
+
+
+h1{
+  font-size: 3rem;
+  text-align: center;
+}
+
+.indv_blog h2{
+  font-size: 2rem;
+  text-align: center;
+}
+
+label{
+font-weight: bold;
+}
+
+
+.button{
+	background-color:rgb(134, 134, 134);
+	color:#fff;
+	padding:10px 15px;
+  border:none;
+  font-weight: bold;
+}
+
+.button:hover{
+	background: rgb(0, 153, 255);
+  color:#fff;
+}
+
+#main-footer{
+	background: #333;
+	color:#fff;
+	text-align: center;
+	padding:5px;
+	margin-top: 50px;
+}

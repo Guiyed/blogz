@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1> Build a Blog</h1>
+
+  {% if blogs|length == 0 %}
+    <p>No entries yet</p>
+
+    {% else %}
+        <ul>
+            {% for entry in blogs %}           
+            <li>
+              <h2><a href="./blog?id={{entry.id}}">{{entry.title}}</a></h2>
+              <p>{{entry.body}}</p>
+              <hr style="border-style: dotted;" />
+            </li>                
+                        
+            {% endfor %}
+        </ul>
+
+    {% endif %}
+
+
+{% endblock %}
