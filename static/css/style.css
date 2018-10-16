@@ -1,15 +1,26 @@
+
 .error {
-  color: red;
+  color: rgb(224, 0, 0);
   font-style: italic;
 }
 
-body{
+.warning {
+  color: rgb(255, 230, 0);
+  font-style: italic;
+}
+
+.success {
+  color: rgb(24, 206, 0);
+  font-style: italic;
+}
+
+body {
   width: 80%;
   margin: auto;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-header{
+header {
   background: #333333;
   color: white;
   padding: 5px;
@@ -24,24 +35,22 @@ header{
   margin-left: 30px;
 }*/
 
-header h1{
+header h1 {
   display: inline-block;
-  padding: auto;
   margin-left: 30px;
 }
 
-nav{
+nav {
   display: inline-block;
   text-align: center;
   /*margin-left: 50px;*/
   margin-right: 50px;
   margin-top: 10px;
-  padding: auto;
   /*border: white 1px dotted;*/
-  float: left; 
+  /*float: left;*/ 
 }
 
-header ul{
+header ul {
   text-align: center;
 }
 
@@ -50,14 +59,31 @@ header li{
   padding: 20px;
 }
 
-nav a{
+header li #logout {
+  display: inline;
+  padding: 20px;
+}
+
+nav a {
   text-decoration: none;
   text-transform: uppercase;
 	color: white;
 }
 
-a:hover{
+a:hover {
 	color:rgb(0, 162, 255);
+}
+
+.nav-links a:hover:last-child {
+  color: red;
+}
+
+#logout:hover{
+	color:rgb(255, 0, 0);
+}
+
+#login:hover{
+	color:rgb(18, 212, 0);
 }
 
 a:active{
@@ -76,9 +102,8 @@ h1{
 }
 
 label{
-font-weight: bold;
+  font-weight: bold;
 }
-
 
 .button{
 	background-color:rgb(134, 134, 134);
@@ -99,4 +124,21 @@ font-weight: bold;
 	text-align: center;
 	padding:5px;
 	margin-top: 50px;
+}
+
+.flash li{
+  background-color:rgba(95, 95, 95, 0.849);
+  border: 2px solid black;
+  padding: 10px;
+  width: 250px;
+  font-size: 1rem;
+  font-weight: bold;  
+  text-align: center;    
+  margin-top: 50px;
+  display: inline-block ;
+  float: left;
+}
+
+.users {
+  font-size: 1rem;
 }
