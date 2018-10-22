@@ -1,62 +1,10 @@
 from flask import Flask, request, redirect, render_template, session, flash
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
+#from flask_sqlalchemy import SQLAlchemy
+#from sqlalchemy import desc
 import validators
-from datetime import datetime
-
-app = Flask(__name__)
-app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:lc101@localhost:8889/blogz'
-app.config['SQLALCHEMY_ECHO'] = True
-db = SQLAlchemy(app)
-app.secret_key = 'GSeVB/.xkffavmur; jvst.lali9jqA'
-
-
-class Blog(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(120))
-    body = db.Column(db.String(500))
-    pub_date = db.Column(db.DateTime)
-    deleted = db.Column(db.Boolean)
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    
-    
-    def __init__(self, owner, title, body, pub_date=None):
-        self.owner = owner
-        self.title = title
-        self.body = body
-        if pub_date is None:
-            pub_date = datetime.utcnow()
-        self.pub_date = pub_date
-        self.deleted = False
-        
-
-    def __repr__(self):
-        return '<Blog %r>' % self.title
-
-class User(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(120))
-    password = db.Column(db.String(32))
-    email = db.Column(db.String(120),unique=True)
-    blogs = db.relationship('Blog', backref='owner') 
-
-
-    def __init__(self, username, password, email=None):
-        self.username = username
-        self.password = password
-        if email is None:
-            email = ''
-        self.email = email
-
-
-    def __repr__(self):
-        return '<User %r>' % self.username
-
-
-
+from app import app, db
+from models import Blog, User
 
 @app.route('/', methods=['GET'])
 def index():
@@ -68,9 +16,25 @@ def index():
 
 @app.route('/blog', methods=['GET'])
 def blog():
-    blogs = Blog.query.filter_by(deleted=False).all()
-    blogs_ordered_most_recent = Blog.query.filter_by(deleted=False).order_by(desc(Blog.pub_date)).all()
-    deleted_blogs = Blog.query.filter_by(deleted=True).all()
+    
+    username = request.args.get('user')
+    #print('username : ',username)
+    
+    if username:
+        currentUser = User.query.filter_by(username=username).first()
+        user_id = currentUser.id
+        #print("........id........: ",user_id)
+        blogs = Blog.query.filter_by(deleted=False,owner_id = user_id).all()
+        blogs_ordered_most_recent = Blog.query.filter_by(deleted=False,owner_id = user_id).order_by(desc(Blog.pub_date)).all()
+        deleted_blogs = Blog.query.filter_by(deleted=True,owner_id = user_id).all()
+
+        return render_template('userposts.html',title="Blogz | Posts", blogs=blogs_ordered_most_recent, deleted_blogs=deleted_blogs, user=currentUser)
+
+    else:
+        username=''
+        blogs = Blog.query.filter_by(deleted=False).all()
+        blogs_ordered_most_recent = Blog.query.filter_by(deleted=False).order_by(desc(Blog.pub_date)).all()
+        deleted_blogs = Blog.query.filter_by(deleted=True).all()
 
     blog_id = request.args.get('id')
 
@@ -80,7 +44,6 @@ def blog():
     else:
         #return render_template('blog.html',title="Build a Blog!", blogs=blogs, deleted_blogs=deleted_blogs)
         return render_template('blog.html',title="Blogz | Posts", blogs=blogs_ordered_most_recent, deleted_blogs=deleted_blogs)
-
 
 
 

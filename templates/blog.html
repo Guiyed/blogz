@@ -10,9 +10,10 @@
         <ul>
             {% for entry in blogs %}           
             <li>
-              <h2><a href="./blog?id={{entry.id}}">{{entry.title}}</a></h2>
-              <p>{{entry.body}}</p>
-              <hr style="border-style: dotted;" />
+                <h2><a href="./blog?id={{entry.id}}">{{entry.title}}</a></h2>
+                <p>{{entry.body}}</p>
+                <h6><i>written by <span><a href="./blog?user={{entry.owner.username}}">{{entry.owner.username}}</a></span> on {{entry.pub_date}}</i></h6>
+                <hr style="border-style: dotted;" />
             </li>                
                         
             {% endfor %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1> Blogz | {{user.username}} Posts </h1>
+
+  {% if blogs|length == 0 %}
+    <p>No entries yet</p>
+
+    {% else %}
+        <ul>
+            {% for entry in blogs %}           
+            <li>
+              <h2><a href="./blog?id={{entry.id}}">{{entry.title}}</a></h2>
+              <p>{{entry.body}}</p>
+              <h6><i>written by <span>{{user.username}}</span> on {{entry.pub_date}}</i></h6>
+              <hr style="border-style: dotted;" />
+            </li>                
+                        
+            {% endfor %}
+        </ul>
+
+    {% endif %}
+
+
+{% endblock %}

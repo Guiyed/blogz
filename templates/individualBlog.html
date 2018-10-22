@@ -9,7 +9,8 @@
     {% else %}
         <div class="indv_blog">
             <h2 > {{blog.title}}</h2>        
-            <p>{{blog.body}}</p>    
+            <p>{{blog.body}}</p>  
+            <h6><i>written by <span><a href="./blog?user={{blog.owner.username}}">{{blog.owner.username}}</a></span> on {{blog.pub_date}}</i></h6>  
         </div>
     {% endif %}
 

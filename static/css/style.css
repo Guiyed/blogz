@@ -98,7 +98,7 @@ h1{
 
 .indv_blog h2{
   font-size: 2rem;
-  text-align: center;
+  text-align: left;
 }
 
 label{
@@ -141,4 +141,9 @@ label{
 
 .users {
   font-size: 1rem;
+}
+
+span {
+  color: dodgerblue;
+  font-size: 14px;
 }
