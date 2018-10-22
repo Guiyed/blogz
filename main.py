@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, session, flash
+from flask import Flask, request, redirect, render_template, session, flash, url_for
 from sqlalchemy import desc
 import validators
 from hashutils import check_pw_hash
@@ -22,12 +22,23 @@ def blog():
     if username:
         currentUser = User.query.filter_by(username=username).first()
         user_id = currentUser.id
-        #print("........id........: ",user_id)
-        blogs = Blog.query.filter_by(deleted=False,owner_id = user_id).all()
-        blogs_ordered_most_recent = Blog.query.filter_by(deleted=False,owner_id = user_id).order_by(desc(Blog.pub_date)).all()
-        deleted_blogs = Blog.query.filter_by(deleted=True,owner_id = user_id).all()
+        
+        # ------- Antes de añadir paginacion -----------  
+        #blogs = Blog.query.filter_by(deleted=False,owner_id = user_id).all()
+        #blogs_ordered_most_recent = Blog.query.filter_by(deleted=False,owner_id = user_id).order_by(desc(Blog.pub_date)).all()
+        #deleted_blogs = Blog.query.filter_by(deleted=True,owner_id = user_id).all()
+        #return render_template('userposts.html',title="Blogz | Posts", blogs=blogs_ordered_most_recent, deleted_blogs=deleted_blogs, user=currentUser)
 
-        return render_template('userposts.html',title="Blogz | Posts", blogs=blogs_ordered_most_recent, deleted_blogs=deleted_blogs, user=currentUser)
+        # ---------- Con Paginacion -------------
+        page = request.args.get('page', 1, type=int)
+        posts = Blog.query.filter_by(deleted=False,owner_id = user_id).order_by(desc(Blog.pub_date)).paginate(page, app.config['POSTS_PER_PAGE_USER'], False)
+        next_url = url_for('blog', user=username, page=posts.next_num) \
+            if posts.has_next else None
+        prev_url = url_for('blog', user=username, page=posts.prev_num) \
+            if posts.has_prev else None
+            
+        return render_template('userposts.html',title="Blogz | Posts", blogs=posts.items, user=currentUser, next_url=next_url, prev_url=prev_url)
+        
 
     else:
         username=''
@@ -41,8 +52,16 @@ def blog():
         indv_blog = Blog.query.get(blog_id)
         return render_template('individualblog.html',title="Blogz | Post", blogs=blogs, blog=indv_blog)
     else:
-        #return render_template('blog.html',title="Build a Blog!", blogs=blogs, deleted_blogs=deleted_blogs)
-        return render_template('blog.html',title="Blogz | Posts", blogs=blogs_ordered_most_recent, deleted_blogs=deleted_blogs)
+
+        page = request.args.get('page', 1, type=int)
+        posts = Blog.query.filter_by(deleted=False).order_by(desc(Blog.pub_date)).paginate(page, app.config['POSTS_PER_PAGE'], False)
+        next_url = url_for('blog', page=posts.next_num) \
+            if posts.has_next else None
+        prev_url = url_for('blog', page=posts.prev_num) \
+            if posts.has_prev else None
+            
+        return render_template('blog.html',title="Blogz | Posts", blogs=posts.items, next_url=next_url, prev_url=prev_url)
+        #return render_template('blog.html',title="Blogz | Posts", blogs=blogs_ordered_most_recent, deleted_blogs=deleted_blogs)
 
 
 
